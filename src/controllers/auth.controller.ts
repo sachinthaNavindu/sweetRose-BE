@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { User, type IUSER } from "../models/user.models.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { signAccessToken, signRefreshToken } from "../utils/Token.js";
 
 export const register = async (req: Request, res: Response) => {
@@ -30,8 +30,11 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = async(req:Request, res:Response)=>{
+  
   try{
     const {email,password} = req.body
+
+    console.log(email,password)
 
     const user = await User.findOne({email}).select("+password") as IUSER | null
 

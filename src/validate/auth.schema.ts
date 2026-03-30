@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const registerSchema = z.object({
   body: z.object({
-    username: z
+    userName: z
       .string()
       .min(1, "Name is required")
       .trim()
@@ -33,13 +33,13 @@ export const loginSchema = z.object({
       .min(1, "Email is required")
       .trim()
       .toLowerCase(),
+    password: z
+      .string({ error: "Password is required" })
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,100}$/,
+        "Password must be 8-100 characters and contain at least one uppercase letter, one lowercase letter, and one number",
+      ),
   }),
-  password: z
-    .string({ error: "Password is required" })
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,100}$/,
-      "Password must be 8-100 characters and contain at least one uppercase letter, one lowercase letter, and one number",
-    )
 });
 
 export type RegisterSchema = z.infer<typeof registerSchema>["body"];
