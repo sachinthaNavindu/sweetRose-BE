@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors"
 import authRouter from "./routes/auth.js";
 import cookieParser from "cookie-parser"
+import tokenRouter from "./routes/token.js";
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ app.use(
     })
 )
 app.use("/sweet-rose/auth",authRouter)
+app.use("/sweet-rose/token",tokenRouter)
 
 mongoose
     .connect(MONGO_URI)
