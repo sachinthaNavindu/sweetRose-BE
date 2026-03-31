@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { User, type IUSER } from "../models/user.models.js";
 import bcrypt from "bcrypt";
 import { signAccessToken, signRefreshToken } from "../utils/Token.js";
+import type { AuthRequest } from "../types/auth.js";
 
 export const me = async (req: any, res: Response) => {
   const user = await User.findById(req.user.sub).select("-password");
@@ -14,6 +15,7 @@ export const me = async (req: any, res: Response) => {
       name: user.userName,
       email: user.email,
       id: user._id,
+      phone:user.whatsAppNumber
     },
   });
 };
@@ -84,10 +86,45 @@ export const login = async (req: Request, res: Response) => {
       user:{
         name:user.userName,
         email:user.email,
-        id:user._id
+        id:user._id,
+        phone:user.whatsAppNumber
       }
     });
   } catch (err) {
     return res.status(500).json({ message: "Internal server error", err });
   }
 };
+
+export const updateUser = async(req:AuthRequest,res:Response)=>{
+  try{
+    const userId = req.user?.sub
+
+    const {userName,email,whatsAppNumber} = req.body
+
+    const user = await User.findById(userId)
+
+    if(!user){
+      return res.status(404).json({message:"User not found"})
+    }
+
+    user.userName = userName
+    user.whatsAppNumber = whatsAppNumber
+    
+    await user.save()
+
+    return res.status(200).json({
+      message:"User updated succefully",
+      user:{
+        name:user.userName,
+        email:user.email,
+        id:user._id,
+        phone:user.whatsAppNumber
+      },
+    })
+  }catch(err){
+    return res.status(500).json({
+      message:"Internal server error",
+      err
+    })
+  }
+}
