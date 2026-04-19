@@ -87,7 +87,8 @@ export const login = async (req: Request, res: Response) => {
         name:user.userName,
         email:user.email,
         id:user._id,
-        phone:user.whatsAppNumber
+        phone:user.whatsAppNumber,
+        roles: user.roles
       }
     });
   } catch (err) {
